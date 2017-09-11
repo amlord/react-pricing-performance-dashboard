@@ -1,0 +1,25 @@
+/* Colours */
+@primaryColour: #003a5d;
+
+@chartColour1: #003a5d;
+@chartColour2: lighten(@chartColour1, 15%);
+@chartColour3: lighten(@chartColour1, 30%);
+@chartColour4: lighten(@chartColour1, 45%);
+@chartColour5: lighten(@chartColour1, 60%);
+
+@warningColour: #f21000;
+@cautionColour: #ffd700;
+@okColour: #2dd00b;
+
+@targetColour: #000;
+
+
+/* ----- import bootstrap styles ----- */
+@import "third-party/bootstrap/v3.3.7/bootstrap.less";
+
+/* ----- Standalone Setup Styles ----- */
+@import "portal/base-styles.less";
+
+/* ----- import chart styles ----- */
+@import "charts/gm-waterfall.less";
+@import "charts/revenue-mix.less";

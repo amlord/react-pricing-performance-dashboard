@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot: Dealer Search Form 1`] = `
+<div
+  className="dealerMap__searchFormContainer"
+>
+  <form
+    className="dealerMap__searchForm"
+    onSubmit={[Function]}
+  >
+    <input
+      autoFocus={true}
+      className="dealerMap__searchText"
+      onChange={[Function]}
+      placeholder="Search dealer name or code"
+      value=""
+    />
+  </form>
+</div>
+`;

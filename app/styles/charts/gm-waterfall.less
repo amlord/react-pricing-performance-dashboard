@@ -1,0 +1,73 @@
+.waterfallChart {
+    font-size: 0;
+}
+
+.waterfallChart__bar {
+    fill: #ccc;
+}
+
+.waterfallChart__bar--standard {
+    fill: @primaryColour;
+}
+
+.waterfallChart__bar--warning {
+    fill: @warningColour;
+}
+
+.waterfallChart__bar--caution {
+    fill: @cautionColour;
+}
+
+.waterfallChart__bar--ok {
+    fill: @okColour;
+}
+
+.waterfallChart__barLabel {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.waterfallChart__axis text {
+    font-size: 12px;
+}
+
+.waterfallChart__axis path,
+.waterfallChart__axis line {
+    fill: none;
+    stroke: #ccc;
+}
+
+ .waterfallChart__axis--x .tick text {
+    transform: translate( 0, 0.4em );
+}
+
+.waterfallChart__axis--y .tick text {
+    transform: translate( -0.6em, 0 );
+} 
+
+.waterfallChart__targetGmLine,
+.waterfallChart__targetGmBox {
+    fill: @targetColour;
+}
+
+.waterfallChart__targetGmText {
+    fill: #fff;
+    font-size: 9px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.waterfallChart__axisLabel {
+    fill: #ccc;
+    text-anchor: middle;
+}
+
+.waterfallChart__dottedLine {
+    stroke: #ccc;
+    stroke-width: 1;
+    stroke-dasharray: 3;
+}
+
+.waterfallChart__dottedLine:first-of-type {
+    display: none;
+}

@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot: Dealer Search Result (basic) 1`] = `
+<li
+  className="dealerSearchResult dealerSearchResult--op"
+  style={
+    Object {
+      "opacity": "0.5",
+    }
+  }
+>
+  <img
+    alt="Abacus Office Direct icon"
+    className="dealerSearchResult__icon"
+    src="//static.office-power.net/Images/dealers/ABA/favicon.ico"
+  />
+  <a
+    className="dealerSearchResult__name"
+    href="/Dealer/Impersonate/600000000"
+  >
+    Abacus Office Direct
+  </a>
+  <div
+    className="dealerSearchResult__info"
+    onClick={[Function]}
+  >
+    Dealer Information
+  </div>
+</li>
+`;
+
+exports[`Snapshot: Dealer Search Result (information) 1`] = `
+<li
+  className="dealerSearchResult dealerSearchResult--op dealerSearchResult--info"
+  style={
+    Object {
+      "opacity": "0.5",
+    }
+  }
+>
+  <img
+    alt="Abacus Office Direct icon"
+    className="dealerSearchResult__icon"
+    src="//static.office-power.net/Images/dealers/ABA/favicon.ico"
+  />
+  <a
+    className="dealerSearchResult__name"
+    href="/Dealer/Impersonate/600000000"
+  >
+    Abacus Office Direct
+  </a>
+  <div
+    className="dealerSearchResult__info dealerSearchResult__info--close"
+    onClick={[Function]}
+  >
+    Dealer Information
+  </div>
+  <div
+    className="dealerInfoPanel"
+  >
+    <div
+      className="dealerInfoPanel__text dealerInfoPanel__text--address"
+    >
+      Unit I, Lammas Courtyard, Weldon Industrial Estate, Corby, NN17 5EZ
+    </div>
+    <div
+      className="dealerInfoPanel__text dealerInfoPanel__text--url"
+    >
+      <a
+        href="http://www.abacusofficedirect.co.uk/"
+        target="_blank"
+        title="nodejs website"
+      >
+        http://www.abacusofficedirect.co.uk/
+      </a>
+    </div>
+    <div
+      className="dealerInfoPanel__text dealerInfoPanel__text--phone"
+    >
+      <a
+        href="tel:0800 804 8533"
+        title="nodejs phone number"
+      >
+        0800 804 8533
+      </a>
+    </div>
+    <div
+      className="dealerInfoPanel__text dealerInfoPanel__text--email"
+    >
+      <a
+        href="mailto:sales@abacusofficesupplies.co.uk"
+        target="_blank"
+        title="nodejs email address"
+      >
+        sales@abacusofficesupplies.co.uk
+      </a>
+    </div>
+  </div>
+</li>
+`;

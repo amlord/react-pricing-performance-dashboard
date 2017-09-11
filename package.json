@@ -1,0 +1,52 @@
+{
+  "name": "sexy-dealer-map",
+  "version": "1.0.0",
+  "description": "A dealer map to replace the dealer selector inside support centre",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amlord/react-dealer-map"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "SET NODE_ENV='production' & webpack -p",
+    "test": "jest"
+  },
+  "keywords": [
+    "React",
+    "Google",
+    "Map",
+    "JS"
+  ],
+  "author": "Andrew Lord",
+  "license": "ISC",
+  "dependencies": {
+    "perfect-scrollbar": "^0.7.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^20.0.3",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.5.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "html-webpack-plugin": "^2.28.0",
+    "jest": "^20.0.4",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5",
+    "react-test-renderer": "^15.6.1",
+    "style-loader": "^0.18.2",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.7.1"
+  },
+  "babel": {
+    "presets": [
+      "env",
+      "react"
+    ]
+  }
+}

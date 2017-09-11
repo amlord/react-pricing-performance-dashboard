@@ -1,0 +1,170 @@
+
+/* CHART */
+.revenueChart {
+    font-size: 0;
+}
+
+.revenueChart__canvas {
+    display: block;
+}
+
+.revenueChart__pieBg {
+    fill: #e5e5e5;
+}
+
+.revenueChart__pieFg {
+    fill: #fff;
+}
+
+.revenueChartLabel__type,
+.revenueChartLabel__revenueValue {
+    fill: #333;
+    font-size: 12px;
+    text-anchor: middle;
+}
+
+.revenueChartLabel__revenueValue {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.revenueChartLabel__gmPercent {
+    text-anchor: middle;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.revenueChart__targetPieBg {
+    fill: #f2f2f2;
+}
+  
+.revenueChart__targetArc {
+    display: none;
+}
+
+.revenueChart__targetArc--visible {
+    display: block;
+}   
+
+.revenueChart__targetLineEnd {
+    stroke-width: 1;
+}
+
+.revenueChart__industryAverageText {
+    font-size: 10px;
+}
+
+.revenueChart__segmentLabelKey,
+.revenueChart__averageLabel rect,
+.revenueChart__activeSegmentLabel rect {
+    height: 32px;
+    width: 32px;
+}
+
+.revenueChart__segmentLabelOverlay {
+    height: 40px;
+    width: 105px;
+}
+
+.revenueChart__activeSegmentLabel rect {
+    fill: #666;
+}
+
+.revenueChart__segmentLabelTitleText,
+.revenueChart__segmentLabelRevenueText,
+.revenueChart__averageLabelTitleText,
+.revenueChart__averageLabelRevenueText,
+.revenueChart__activeSegmentLabelTitleText,
+.revenueChart__activeSegmentLabelRevenueText {
+    dominant-baseline: hanging;
+    font-size: 12px;
+}
+
+.revenueChart__segmentLabelRevenueText,
+.revenueChart__averageLabelRevenueText,
+.revenueChart__activeSegmentLabelRevenueText {
+    font-weight: bold;
+}
+
+.revenueChart__averageLabelTitleText,
+.revenueChart__averageLabelRevenueText {
+    text-anchor: end;
+}
+
+.revenueChartLabel__gmBg {
+    fill: #e5e5e5;
+}
+
+.revenueChartLabel__gmBg--warning {
+    fill: @warningColour;
+}
+
+.revenueChartLabel__gmPercent--warning {
+    fill: #fff;
+}
+
+.revenueChartLabel__gmBg--caution {
+    fill: @cautionColour;
+}
+
+.revenueChartLabel__gmPercent--caution {
+    fill: #333;
+}
+
+.revenueChartLabel__gmBg--ok {
+    fill: @okColour;
+}
+
+.revenueChartLabel__gmPercent--ok {
+    fill: #fff;
+}
+
+.revenueChartLabel__gmPercent--hover {
+    fill: #333;
+}
+
+/* chart colours */
+.revenueChart__arc--standard path,
+.revenueChart__segmentLabelKey--standard {
+    fill: @chartColour1;
+}
+
+.revenueChart__targetArc path,
+.revenueChart__industryAverageText,
+.revenueChart__averageLabel rect {
+    fill: @targetColour;
+}
+
+.revenueChart__targetLineEnd {
+    stroke: @targetColour;
+}
+
+.revenueChart__arc--discount path,
+.revenueChart__segmentLabelKey--discount {
+    fill: @chartColour2;
+}
+
+.revenueChart__arc--contract path,
+.revenueChart__segmentLabelKey--contract {
+    fill: @chartColour3;
+}
+
+.revenueChart__arc--promotional path,
+.revenueChart__segmentLabelKey--promotional {
+    fill: @chartColour4;
+}
+
+.revenueChart__arc--segmented path,
+.revenueChart__segmentLabelKey--segmented {
+    fill: @chartColour5;
+}
+
+.revenueChart__segmentLabel--blank .revenueChart__segmentLabelKey,
+.revenueChart__segmentLabel--blank text,
+.revenueChart__arc--blank path {
+    fill: #e5e5e5;
+}
+
+.revenueChart__segmentLabelOverlay {
+    fill: transparent;
+}
