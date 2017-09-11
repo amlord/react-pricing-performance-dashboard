@@ -7,7 +7,7 @@ const GOLDEN_RATIO = 1.61803398875;
 
 // ----- PRIVATE FUNCTIONS ----------------------------------------------
 function _drawGmWaterfallChart( data, targetGm, revenueMix )
-{console.log(revenueMix);
+{
     const dataRange  = data.map( d => {
         return d.gmPercent;
     } );
@@ -132,6 +132,10 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
                 let selectedItem = revenueMix.data.find(item => {
                     return item.name === d.name;
                 });
+
+                if( !selectedItem ) {
+                    return;
+                }
 
                 // highlight the selected revenue mix piechart segment & gm waterfall bar
                 PricingOverviewInteraction.highlight(
