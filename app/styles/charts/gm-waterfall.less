@@ -3,11 +3,15 @@
 }
 
 .waterfallChart__bar {
-    fill: #ccc;
+    fill: #e5e5e5;
 }
 
 .waterfallChart__bar--standard {
-    fill: @primaryColour;
+    fill: @chartColour1;
+}
+
+.waterfallChart__bar--blank {
+    fill: #e5e5e5;
 }
 
 .waterfallChart__bar--warning {
@@ -20,6 +24,29 @@
 
 .waterfallChart__bar--ok {
     fill: @okColour;
+}
+
+.waterfallChart__bar--hover {
+    
+    &.waterfallChart__bar--standard {
+        fill: @chartColour1;
+    }
+    
+    &.waterfallChart__bar--discount {
+        fill: @chartColour2;
+    }
+    
+    &.waterfallChart__bar--contract {
+        fill: @chartColour3;
+    }
+    
+    &.waterfallChart__bar--promotional {
+        fill: @chartColour4;
+    }
+
+    &.waterfallChart__bar--segmented {
+        fill: @chartColour5;
+    }
 }
 
 .waterfallChart__barLabel {

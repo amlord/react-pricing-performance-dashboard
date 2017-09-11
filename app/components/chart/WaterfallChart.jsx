@@ -12,7 +12,8 @@ class WaterfallChart extends React.Component
 
         this.state = {
             waterfall: props.waterfall,
-            target: props.target
+            target: props.target,
+            revenueMix: props.revenueMix
         };
 
         this.drawWaterfallChart = this.drawWaterfallChart.bind(this);
@@ -20,7 +21,7 @@ class WaterfallChart extends React.Component
 
     componentWillReceiveProps( nextProps )
     {
-        let { waterfall, target } = this.state;
+        let { waterfall, target, revenueMix } = this.state;
 
         if( nextProps.waterfall !== waterfall )
         {
@@ -33,6 +34,13 @@ class WaterfallChart extends React.Component
         {
             this.setState({
                 target: nextProps.target
+            });
+        }
+
+        if( nextProps.revenueMix !== revenueMix )
+        {
+            this.setState({
+                revenueMix: nextProps.revenueMix
             });
         }
     }
@@ -52,7 +60,8 @@ class WaterfallChart extends React.Component
         // draw the waterfall chart using d3.js
         GmWaterfallChart.draw(
             this.state.waterfall,
-            this.state.target
+            this.state.target,
+            this.state.revenueMix
         );
     }
 

@@ -8,7 +8,8 @@ const mapStateToProps = state =>
 {
   return {
     waterfall: state.waterfall,
-    target: state.target
+    target: state.target,
+    revenueMix: state.revenueMix
   }
 }
 

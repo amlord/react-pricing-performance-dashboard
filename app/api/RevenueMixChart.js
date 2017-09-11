@@ -1,4 +1,10 @@
+// custom d3 chart api for cross-chart interaction
+let PricingOverviewInteraction = require('./PricingOverviewInteraction.js');
+let HelperFunctions = require('./HelperFunctions.js');
+
+// constants
 const GOLDEN_RATIO = 1.61803398875;
+
 
 // ----- PRIVATE FUNCTIONS ----------------------------------------------
 function _drawRevenueMixChart( data, totals, targetGM )
@@ -79,10 +85,26 @@ function _drawRevenueMixChart( data, totals, targetGM )
             .append("g")
             .attr("class", d => { return "revenueChart__arc revenueChart__arc--" + d.data.name.toLowerCase() })
             .on("mouseover", function(d,i){
-                _sectionSelect(d);
+                // highlight the selected revenue mix piechart segment & gm waterfall bar
+                PricingOverviewInteraction.highlight(
+                    true,
+                    d.data.name,
+                    d.data.gmPercent,
+                    d.data.revenue,
+                    d.data.industryRevenuePercent
+                );
             })
             .on("mouseout", function(d,i){
-                _sectionClear(d, totals, targetGM);
+                // clear the highlighted revenue mix piechart segments & gm waterfall bars
+                PricingOverviewInteraction.highlight(
+                    false,
+                    d.data.name,
+                    d.data.gmPercent,
+                    d.data.revenue,
+                    d.data.industryRevenuePercent,
+                    totals,
+                    targetGM
+                );
             });
 
     arc.append("path")
@@ -166,7 +188,7 @@ function _drawRevenueMixChart( data, totals, targetGM )
     // revenue value
     pieFg.append("text")
         .classed("revenueChartLabel__revenueValue", true)
-        .text( _formatCurrency( totals.revenue ) )
+        .text( HelperFunctions.formatCurrency( totals.revenue ) )
         .attr("dx", width / 2 )
         .attr("dy", ( height / 2 ) - 8 );
 
@@ -177,19 +199,19 @@ function _drawRevenueMixChart( data, totals, targetGM )
 
     // gm percent text background
     pieFg.append("rect")
-        .attr("class", "revenueChartLabel__gmBg revenueChartLabel__gmBg--" + _gmPercentColour( totals.gmPercent, targetGM ))
+        .attr("class", "revenueChartLabel__gmBg revenueChartLabel__gmBg--" + HelperFunctions.gmPercentColour( totals.gmPercent, targetGM ))
         .attr("height", gmPercentPanel.height )
         .attr("width", gmPercentPanel.width )
         .attr("x", ( width / 2 ) - ( gmPercentPanel.width / 2 ) )
         .attr("y", ( height / 2 ) + 11 )
         .attr("rx", 4 )
         .attr("ry", 4 )
-        .attr("fill", _gmPercentColour( totals.gmPercent, targetGM ));
+        .attr("fill", HelperFunctions.gmPercentColour( totals.gmPercent, targetGM ));
 
     // gm percent text
     pieFg.append("text")
-        .attr("class", "revenueChartLabel__gmPercent revenueChartLabel__gmPercent--" + _gmPercentColour( totals.gmPercent, targetGM ))
-        .text( _formatGM( totals.gmPercent ) )
+        .attr("class", "revenueChartLabel__gmPercent revenueChartLabel__gmPercent--" + HelperFunctions.gmPercentColour( totals.gmPercent, targetGM ))
+        .text( HelperFunctions.formatGM( totals.gmPercent ) )
         .attr("dx", width / 2 )
         .attr("dy", ( height / 2 ) + 30 );
 
@@ -219,7 +241,7 @@ function _drawRevenueMixChart( data, totals, targetGM )
     segmentLabel
         .append("text")
         .classed("revenueChart__segmentLabelRevenueText", true)
-        .text( d => _formatCurrency( d.data.revenue ) )
+        .text( d => HelperFunctions.formatCurrency( d.data.revenue ) )
         .attr("x", 38)
         .attr("y", (d,i) => 40 * i )
         .attr("dy", 17);
@@ -230,10 +252,26 @@ function _drawRevenueMixChart( data, totals, targetGM )
         .attr("x", 0)
         .attr("y", (d,i) => 40 * i )
         .on("mouseover", function(d,i){
-            _sectionSelect(d);
+            // highlight the selected revenue mix piechart segment & gm waterfall bar
+            PricingOverviewInteraction.highlight(
+                true,
+                d.data.name,
+                d.data.gmPercent,
+                d.data.revenue,
+                d.data.industryRevenuePercent
+            );
         })
         .on("mouseout", function(d,i){
-            _sectionClear(d, totals, targetGM);
+            // clear the highlighted revenue mix piechart segments & gm waterfall bars
+            PricingOverviewInteraction.highlight(
+                false,
+                d.data.name,
+                d.data.gmPercent,
+                d.data.revenue,
+                d.data.industryRevenuePercent,
+                totals,
+                targetGM
+            );
         });
     
     // add industry average label
@@ -261,96 +299,6 @@ function _drawRevenueMixChart( data, totals, targetGM )
         .attr("x", xPositon - 6)
         .attr("y", 0 )
         .attr("dy", 17);
-}
-
-// function to format revenue value consistently
-function _formatCurrency( amount )
-{
-    return "£" + amount.format(0, 3, ',', '.');
-}
-
-// function to format GM% value consistently
-function _formatGM( amount )
-{
-    return amount + "% GM";
-}
-
-// function to format GM% colour consistently
-function _gmPercentColour( gmPercent, target )
-{
-    if( gmPercent >= target )
-    {
-        return "ok";
-    }
-
-    if( ( gmPercent >= ( target - 3 ) ) )
-    {
-        return "caution";
-    }
-
-    return "warning";
-}
-
-function _sectionSelect(d)
-{
-    d3.selectAll(".revenueChart__arc")
-        .classed("revenueChart__arc--blank", true);
-
-    d3.selectAll(".revenueChart__arc--" + d.data.name.toLowerCase())
-        .classed("revenueChart__arc--blank", false)
-        .classed("revenueChart__arc--hover", true);
-
-    d3.select(".revenueChartLabel__type").text( d.data.name );
-
-    d3.select(".revenueChartLabel__revenueValue").text( _formatCurrency( d.data.revenue ) );
-
-    d3.select(".revenueChartLabel__gmBg").attr( "class", "revenueChartLabel__gmBg");
-
-    d3.select(".revenueChartLabel__gmPercent")
-        .classed("revenueChartLabel__gmPercent--hover", true)
-        .text( _formatGM( d.data.gmPercent ) );
-
-    d3.selectAll(".revenueChart__segmentLabel")
-        .classed("revenueChart__segmentLabel--blank", true);
-
-    d3.selectAll(".revenueChart__segmentLabel--" + d.data.name.toLowerCase())
-        .classed("revenueChart__segmentLabel--blank", false);
-
-    d3.selectAll(".revenueChart__targetArc--" + d.data.name.toLowerCase())
-        .classed("revenueChart__targetArc--visible", true);
-
-    d3.selectAll(".revenueChart__averageLabelRevenueText")
-        .text(d.data.industryRevenuePercent + "%");
-
-    d3.selectAll(".revenueChart__averageLabel")
-        .attr("display", "block");
-}
-
-function _sectionClear(d, totals, targetGM)
-{
-    d3.selectAll(".revenueChart__arc")
-        .classed("revenueChart__arc--blank", false)
-        .classed("revenueChart__arc--hover", false);
-
-    d3.select(".revenueChartLabel__type").text( totals.displayName );
-
-    d3.select(".revenueChartLabel__revenueValue").text( _formatCurrency( totals.revenue ) );
-
-    d3.select(".revenueChartLabel__gmBg")
-        .attr( "class", "revenueChartLabel__gmBg revenueChartLabel__gmBg--" + _gmPercentColour( totals.gmPercent, targetGM ) );
-
-    d3.select(".revenueChartLabel__gmPercent")
-        .classed("revenueChartLabel__gmPercent--hover", false)
-        .text( _formatGM( totals.gmPercent ) );
-        
-    d3.selectAll(".revenueChart__segmentLabel")
-        .classed("revenueChart__segmentLabel--blank", false);
-
-    d3.selectAll(".revenueChart__targetArc--" + d.data.name.toLowerCase())
-        .classed("revenueChart__targetArc--visible", false);
-
-    d3.selectAll(".revenueChart__averageLabel")
-        .attr("display", "none");
 }
 
 // ***** PUBLIC FUNCTIONS ****************************************************

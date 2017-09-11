@@ -1,9 +1,13 @@
+// custom d3 chart api for the revenue mix chart
+let PricingOverviewInteraction = require('./PricingOverviewInteraction.js');
+let HelperFunctions = require('./HelperFunctions.js');
+
+// constants
 const GOLDEN_RATIO = 1.61803398875;
 
 // ----- PRIVATE FUNCTIONS ----------------------------------------------
-function _drawGmWaterfallChart( data, targetGm )
-{
-
+function _drawGmWaterfallChart( data, targetGm, revenueMix )
+{console.log(revenueMix);
     const dataRange  = data.map( d => {
         return d.gmPercent;
     } );
@@ -85,7 +89,7 @@ function _drawGmWaterfallChart( data, targetGm )
                     return classes;
                 }
 
-                return classes + " waterfallChart__bar--" + _gmPercentColour( d.value, targetGm );
+                return classes + " waterfallChart__bar--" + HelperFunctions.gmPercentColour( d.value, targetGm );
             })
             .attr("x", (d, i) =>
             {
@@ -122,7 +126,36 @@ function _drawGmWaterfallChart( data, targetGm )
                 return barHeight !== 0 ? barHeight : 1;
             })
             .attr("rx", 4)
-            .attr("ry", 4);
+            .attr("ry", 4)
+            .on("mouseover", function(d,i){
+
+                let selectedItem = revenueMix.data.find(item => {
+                    return item.name === d.name;
+                });
+
+                // highlight the selected revenue mix piechart segment & gm waterfall bar
+                PricingOverviewInteraction.highlight(
+                    true,
+                    d.name,
+                    d.gmPercent,
+                    selectedItem.revenue,
+                    selectedItem.industryRevenuePercent,
+                    { revenue: revenueMix.totals.revenue, gmPercent: revenueMix.totals.gmPercent },
+                    targetGm
+                );
+            })
+            .on("mouseout", function(d,i){
+                // clear the highlighted revenue mix piechart segments & gm waterfall bars
+                PricingOverviewInteraction.highlight(
+                    false,
+                    d.name,
+                    d.gmPercent,
+                    0,
+                    0,
+                    { revenue: revenueMix.totals.revenue, gmPercent: revenueMix.totals.gmPercent },
+                    targetGm
+                );
+            });;
 
     chart.append("rect")
         .attr("class", () => {
@@ -143,7 +176,7 @@ function _drawGmWaterfallChart( data, targetGm )
         .attr("class", () => {
             let classes = "waterfallChart__bar waterfallChart__bar--" + data[data.length-1].name.toLowerCase();
 
-            return classes + " waterfallChart__bar--" + _gmPercentColour( data[data.length-1].value, targetGm );
+            return classes + " waterfallChart__bar--" + HelperFunctions.gmPercentColour( data[data.length-1].value, targetGm );
         })
         .attr("height", 4)
         .attr("width", x.bandwidth() - ( x.bandwidth() * 0.25 ) )
@@ -230,29 +263,31 @@ function _dottedLineY( d, i, data )
         parseFloat(data[i].gmPercent);
 }
 
-// function to format GM% colour consistently
-function _gmPercentColour( gmPercent, target )
-{
-    if( gmPercent >= target )
-    {
-        return "ok";
-    }
-
-    if( ( gmPercent >= ( target - 3 ) ) )
-    {
-        return "caution";
-    }
-
-    return "warning";
-}
-
 // ***** PUBLIC FUNCTIONS ****************************************************
 const GmWaterfallChart =
 {
-    draw: function( data, targetGm )
+    draw: function( data, targetGm, revenueMix )
     {
         // draw the GM Waterfall chart
-        _drawGmWaterfallChart( data, targetGm );
+        _drawGmWaterfallChart( data, targetGm, revenueMix );
+    },
+    highlight: function( highlight = false, segmentName = "Standard" )
+    {
+        // find the selected item data
+        let selectedItem = chartData.data.find(item => {
+            return item.name === segmentName;
+        });
+
+        if( highlight && selectedItem && segmentName !== "Actual" )
+        {
+            // highlight the selected arc
+            _sectionSelect({ name: segmentName });
+        }
+        else
+        {
+            // clear any highlighted arcs
+            _sectionClear();
+        }
     }
 };
 
