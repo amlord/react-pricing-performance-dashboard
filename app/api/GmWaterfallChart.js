@@ -282,7 +282,7 @@ const GmWaterfallChart =
             return item.name === segmentName;
         });
 
-        if( highlight && selectedItem && segmentName !== "Actual" )
+        if( highlight && selectedItem && segmentName !== "Overall" )
         {
             // highlight the selected arc
             _sectionSelect({ name: segmentName });

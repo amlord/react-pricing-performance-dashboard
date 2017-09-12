@@ -370,7 +370,7 @@ function calcWaterfallChartValues( data )
 
   // actual GM% value
   chartValues.push({
-    name: "Actual",
+    name: "Overall",
     value: data[TOTAL].gmPercent
   });
 

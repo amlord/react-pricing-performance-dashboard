@@ -98,7 +98,7 @@ const PricingOverviewInteraction =
         targetGM = 0
     )
     {
-        if( highlight && segmentName !== "Actual" )
+        if( highlight && segmentName !== "Overall" )
         {
             // highlight the selected 'GM waterfall erosion' bar
             _waterfallBarSelect({ name: segmentName });
