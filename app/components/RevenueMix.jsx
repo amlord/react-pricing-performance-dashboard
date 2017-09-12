@@ -9,6 +9,7 @@ let GmWaterfallCalculatedValuesContainer = require('./form/GmWaterfallCalculated
 
 let RevenueChartChartContainer = require('./chart/RevenueChartContainer.jsx');
 let WaterfallChartContainer = require('./chart/WaterfallChartContainer.jsx');
+let GmPercentagesContainer = require('./chart/GmPercentagesContainer.jsx');
 
 class RevenueMix extends React.Component
 {
@@ -32,17 +33,7 @@ class RevenueMix extends React.Component
                                             <RevenueChartChartContainer />
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-4">
-                                            <section className="panel">Standard GM</section>
-                                        </div>
-                                        <div className="col-md-4">
-                                            <section className="panel">Customer GM</section>
-                                        </div>
-                                        <div className="col-md-4">
-                                            <section className="panel">Overall GM</section>
-                                        </div>
-                                    </div>
+                                    <GmPercentagesContainer />
                                 </div>
                             </section>
                         </div>
