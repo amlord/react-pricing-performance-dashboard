@@ -1,3 +1,5 @@
+let HelperFunctions = require('../HelperFunctions.js');
+
 /* CONSTANTS */
 const {
   STANDARD,
@@ -247,7 +249,7 @@ function calcGmPercent( data, rowId )
 {
   let gmPercent = ( ( data[rowId].revenue - data[rowId].cogs ) / data[rowId].revenue ) * 100;
 
-  return parseFloat(Math.round(gmPercent * 100) / 100).toFixed(1);
+  return HelperFunctions.formatFloat(gmPercent, 1);
 }
 
 function calcRevenueMixChartValues( data, industryData )
@@ -354,11 +356,11 @@ function calcWaterfallChartValues( data )
 
     // work out the cumalative GM%
     let gmPercent = ( ( cumalativeRev - cumalativeCogs ) / cumalativeRev ) * 100;
-    gmPercent = parseFloat(Math.round(gmPercent * 100) / 100).toFixed(1);
+    gmPercent = HelperFunctions.formatFloat(gmPercent, 1);
 
     // work out the GM difference with the previous row
     let gmDiff = chartValues[i-1].gmPercent - gmPercent;
-    gmDiff = parseFloat(Math.round(gmDiff * 100) / 100).toFixed(1) * -1;
+    gmDiff = HelperFunctions.formatFloat(gmDiff, 1) * -1;
 
     // add chart data to the array
     chartValues.push({

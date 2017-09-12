@@ -43,7 +43,7 @@ class GmPercentages extends React.Component
     }
 
     render()
-    {console.log(this.state.data);
+    {
         let standard  = this.state.revenueMix.data[0],
             overall   = this.state.revenueMix.totals,
             customerRevenue = this.state.data.reduce( ( previous, current, index ) => {
@@ -54,7 +54,7 @@ class GmPercentages extends React.Component
             }, 0),
             customerGm = ( ( customerRevenue - customerCogs ) / customerRevenue ) * 100,
             customer  = {
-                gmPercent: parseFloat(Math.round(customerGm * 100) / 100).toFixed(1),
+                gmPercent: HelperFunctions.formatFloat( customerGm, 1 ),
                 revenue: this.state.revenueMix.data.reduce( ( previous, current, index ) => {
                     return index === 0 ? 0 : previous + parseFloat( current.revenue );
                 }, 0)
