@@ -37,12 +37,6 @@ function _drawRevenueMixChart( data, totals, targetGM )
                 // responsive SVG needs these 2 attributes and no width and height attr
                 .attr("preserveAspectRatio", "xMinYMin meet")
                 .attr("viewBox", "0 0 " + width + " " + height);
-
-    let pieBg = svg.append("circle")
-                    .classed("revenueChart__pieBg", true)
-                    .attr("cx", width / 2 )
-                    .attr("cy", height / 2 )
-                    .attr("r", radius );
     
     let targetChart = svg.append("g")
                     .classed("revenueChart__targetArcs", true)
@@ -53,6 +47,12 @@ function _drawRevenueMixChart( data, totals, targetGM )
                     .attr("cx", width / 2 )
                     .attr("cy", height / 2 )
                     .attr("r", targetRadius - ( targetRadiusGap / 2 ) );
+                    
+    let pieBg = svg.append("circle")
+                    .classed("revenueChart__pieBg", true)
+                    .attr("cx", width / 2 )
+                    .attr("cy", height / 2 )
+                    .attr("r", radius );
     
     let chart = svg.append("g")
                     .classed("revenueChart__arcs", true)
@@ -89,9 +89,12 @@ function _drawRevenueMixChart( data, totals, targetGM )
                 PricingOverviewInteraction.highlight(
                     true,
                     d.data.name,
+                    d.data.displayName,
                     d.data.gmPercent,
                     d.data.revenue,
-                    d.data.industryRevenuePercent
+                    d.data.industryRevenuePercent,
+                    totals,
+                    targetGM
                 );
             })
             .on("mouseout", function(d,i){
@@ -99,6 +102,7 @@ function _drawRevenueMixChart( data, totals, targetGM )
                 PricingOverviewInteraction.highlight(
                     false,
                     d.data.name,
+                    d.data.displayName,
                     d.data.gmPercent,
                     d.data.revenue,
                     d.data.industryRevenuePercent,
@@ -138,39 +142,6 @@ function _drawRevenueMixChart( data, totals, targetGM )
     targetArc.append("path")
         .attr("d", targetPath);
 
-    targetArc.append("line")
-        .classed("revenueChart__targetLineEnd", true)
-        .attr("x1", 0)
-        .attr("y1", 0)
-        .attr("x2", d => { return (targetRadius + 5) * Math.sin(d.endAngle); })
-        .attr("y2", d => { return (targetRadius + 5) * Math.cos(d.endAngle) * -1; });
-
-    targetArc.append("text")
-        .classed("revenueChart__industryAverageText", true)
-        .text( d => { return d.data.industryRevenuePercent + "%"; } )
-        .attr("x", function(d) {
-            const width = this.getBBox().width;
-            const targetTickEnd = (targetRadius + 5) * Math.sin(d.endAngle);
-
-            if( Math.sin(d.endAngle) < 0 )
-            {
-                return targetTickEnd - width;
-            }
-
-            return targetTickEnd;
-        })
-        .attr("y", function(d) {
-            const height = this.getBBox().height;
-            const targetTickEnd = (targetRadius + 5) * Math.cos(d.endAngle) * -1;
-
-            if( Math.cos(d.endAngle) < 0 )
-            {
-                return targetTickEnd + height;
-            }
-            
-            return targetTickEnd - (height / 2);
-        });
-
     // add foreground data circle
     pieFg.append("circle")
         .classed("revenueChart__pieFg", true)
@@ -183,35 +154,19 @@ function _drawRevenueMixChart( data, totals, targetGM )
         .classed("revenueChartLabel__type", true)
         .text( totals.displayName )
         .attr("dx", width / 2 )
-        .attr("dy", ( height / 2 ) - 33 );
+        .attr("dy", ( height / 2 ) - 30 );
 
     // revenue value
     pieFg.append("text")
         .classed("revenueChartLabel__revenueValue", true)
         .text( HelperFunctions.formatCurrency( totals.revenue ) )
         .attr("dx", width / 2 )
-        .attr("dy", ( height / 2 ) - 8 );
+        .attr("dy", ( height / 2 ) + 2 );
 
-    let gmPercentPanel = {
-        height: 30,
-        width: 80
-    };
-
-    // gm percent text background
-    pieFg.append("rect")
-        .attr("class", "revenueChartLabel__gmBg revenueChartLabel__gmBg--" + HelperFunctions.gmPercentColour( totals.gmPercent, targetGM ))
-        .attr("height", gmPercentPanel.height )
-        .attr("width", gmPercentPanel.width )
-        .attr("x", ( width / 2 ) - ( gmPercentPanel.width / 2 ) )
-        .attr("y", ( height / 2 ) + 11 )
-        .attr("rx", 4 )
-        .attr("ry", 4 )
-        .attr("fill", HelperFunctions.gmPercentColour( totals.gmPercent, targetGM ));
-
-    // gm percent text
+    // revenue mix text
     pieFg.append("text")
-        .attr("class", "revenueChartLabel__gmPercent revenueChartLabel__gmPercent--" + HelperFunctions.gmPercentColour( totals.gmPercent, targetGM ))
-        .text( HelperFunctions.formatGM( totals.gmPercent ) )
+        .attr("class", "revenueChartLabel__revenueMix")
+        .text( "(100% of total mix)" )
         .attr("dx", width / 2 )
         .attr("dy", ( height / 2 ) + 30 );
 
@@ -233,18 +188,10 @@ function _drawRevenueMixChart( data, totals, targetGM )
     segmentLabel
         .append("text")
         .classed("revenueChart__segmentLabelTitleText", true)
-        .text( d => d.data.name )
+        .text( d => d.data.displayName )
         .attr("x", 38)
         .attr("y", (d,i) => 40 * i )
-        .attr("dy", 3);
-
-    segmentLabel
-        .append("text")
-        .classed("revenueChart__segmentLabelRevenueText", true)
-        .text( d => HelperFunctions.formatCurrency( d.data.revenue ) )
-        .attr("x", 38)
-        .attr("y", (d,i) => 40 * i )
-        .attr("dy", 17);
+        .attr("dy", 10);
         
     segmentLabel
         .append("rect")
@@ -256,9 +203,12 @@ function _drawRevenueMixChart( data, totals, targetGM )
             PricingOverviewInteraction.highlight(
                 true,
                 d.data.name,
+                d.data.displayName,
                 d.data.gmPercent,
                 d.data.revenue,
-                d.data.industryRevenuePercent
+                d.data.industryRevenuePercent,
+                totals,
+                targetGM
             );
         })
         .on("mouseout", function(d,i){
@@ -266,6 +216,7 @@ function _drawRevenueMixChart( data, totals, targetGM )
             PricingOverviewInteraction.highlight(
                 false,
                 d.data.name,
+                d.data.displayName,
                 d.data.gmPercent,
                 d.data.revenue,
                 d.data.industryRevenuePercent,
@@ -287,7 +238,7 @@ function _drawRevenueMixChart( data, totals, targetGM )
     averageLabel
         .append("text")
         .classed("revenueChart__averageLabelTitleText", true)
-        .text( "Industry average" )
+        .text( "Office Power Average Mix" )
         .attr("x", xPositon - 6)
         .attr("y", 0 )
         .attr("dy", 3);

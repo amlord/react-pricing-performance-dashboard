@@ -9,7 +9,7 @@ const GOLDEN_RATIO = 1.61803398875;
 function _drawGmWaterfallChart( data, targetGm, revenueMix )
 {
     const dataRange  = data.map( d => {
-        return d.gmPercent;
+        return d.cumalative.gm;
     } );
 
     dataRange.push( targetGm );
@@ -67,7 +67,7 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
     let x = d3.scaleBand()
         .domain(data.map(d =>
         {
-            return d.name;
+            return d.displayName;
         }))
         .range([0, innerWidth]);
 
@@ -89,35 +89,35 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
                     return classes;
                 }
 
-                return classes + " waterfallChart__bar--" + HelperFunctions.gmPercentColour( d.value, targetGm );
+                return classes + " waterfallChart__bar--" + HelperFunctions.gmPercentColour( d.gmDiff, targetGm );
             })
             .attr("x", (d, i) =>
             {
-                return x(d.name) + ( x.bandwidth() * 0.125 );
+                return x(d.displayName) + ( x.bandwidth() * 0.125 );
             })
             .attr("y", (d, i) =>
             {
                 // first & last bars
                 if(i === 0 || i === ( data.length - 1 ) )
                 {
-                    return y(d.value);
+                    return y(d.gmDiff);
                 }
 
                 /* bars 'eroding' first bar value (+ve / -ve 
                     depending on cumalative GM% effect) */
-                return ( data[i].gmPercent > data[i-1].gmPercent ) ?
-                    y( parseFloat(data[i].gmPercent) ) :
-                    y( parseFloat(data[i-1].gmPercent) );
+                return ( data[i].cumalative.gm > data[i-1].cumalative.gm ) ?
+                    y( parseFloat( data[i].cumalative.gm ) ) :
+                    y( parseFloat( data[i-1].cumalative.gm ) );
             })
             .attr("width", x.bandwidth() - ( x.bandwidth() * 0.25 ) )
             .attr("height", (d, i) =>
             {
-                let basicBarHeight = y( Math.abs(d.gmPercent) ),
-                    previousBarHeight = y( Math.abs(d.gmPercent) + Math.abs(d.value) );
+                let basicBarHeight = y( Math.abs( d.cumalative.gm ) ),
+                    previousBarHeight = y( Math.abs( d.cumalative.gm ) + Math.abs(d.gmDiff) );
 
                 if( i === 0 || i === ( data.length - 1 ) )
                 {
-                    return  innerHeight - y(Math.abs(d.value));
+                    return  innerHeight - y(Math.abs(d.gmDiff));
                 }
 
                 const barHeight = Math.abs( previousBarHeight - basicBarHeight );
@@ -128,7 +128,6 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
             .attr("rx", 4)
             .attr("ry", 4)
             .on("mouseover", function(d,i){
-
                 let selectedItem = revenueMix.data.find(item => {
                     return item.name === d.name;
                 });
@@ -141,6 +140,7 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
                 PricingOverviewInteraction.highlight(
                     true,
                     d.name,
+                    d.displayName,
                     d.gmPercent,
                     selectedItem.revenue,
                     selectedItem.industryRevenuePercent,
@@ -153,10 +153,15 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
                 PricingOverviewInteraction.highlight(
                     false,
                     d.name,
+                    d.displayName,
                     d.gmPercent,
                     0,
                     0,
-                    { revenue: revenueMix.totals.revenue, gmPercent: revenueMix.totals.gmPercent },
+                    {
+                        revenue: revenueMix.totals.revenue,
+                        gmPercent: revenueMix.totals.gmPercent,
+                        displayName: revenueMix.totals.displayName
+                    },
                     targetGm
                 );
             });;
@@ -169,7 +174,7 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
         .attr("width", x.bandwidth() - ( x.bandwidth() * 0.25 ) )
         .attr("x", () =>
         {
-            return x(data[0].name) + ( x.bandwidth() * 0.125 );
+            return x(data[0].displayName) + ( x.bandwidth() * 0.125 );
         })
         .attr("y", () =>
         {
@@ -180,20 +185,20 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
         .attr("class", () => {
             let classes = "waterfallChart__bar waterfallChart__bar--" + data[data.length-1].name.toLowerCase();
 
-            return classes + " waterfallChart__bar--" + HelperFunctions.gmPercentColour( data[data.length-1].value, targetGm );
+            return classes + " waterfallChart__bar--" + HelperFunctions.gmPercentColour( data[data.length-1].gmDiff, targetGm );
         })
         .attr("height", 4)
         .attr("width", x.bandwidth() - ( x.bandwidth() * 0.25 ) )
         .attr("x", () =>
         {
-            return x(data[data.length-1].name) + ( x.bandwidth() * 0.125 );
+            return x(data[data.length-1].displayName) + ( x.bandwidth() * 0.125 );
         })
         .attr("y", () =>
         {
             return innerHeight - 4;
         });
 
-    // add bars to the chart
+    // add dotted to the chart
     chart.selectAll(".waterfallChart__dottedLines")
         .data(data)
         .enter()
@@ -201,11 +206,11 @@ function _drawGmWaterfallChart( data, targetGm, revenueMix )
             .classed("waterfallChart__dottedLine", true)
             .attr("x1", (d, i) =>
             {
-                return x(d.name) - ( x.bandwidth() * 0.125 ) + 3;
+                return x(d.displayName) - ( x.bandwidth() * 0.125 ) + 3;
             })
             .attr("x2", (d, i) =>
             {
-                return x(d.name) + ( x.bandwidth() * 0.125 ) - 3;
+                return x(d.displayName) + ( x.bandwidth() * 0.125 ) - 3;
             })
             .attr("y1", (d, i) =>
             {
@@ -258,13 +263,13 @@ function _dottedLineY( d, i, data )
     // first & last bars
     if( i === 0 || i === ( data.length - 1 ) )
     {
-        return d.value;
+        return d.gmDiff;
     }
 
     // line at top or bottom of bar, depentant upon +ve / -ve effect
-    return ( data[i].gmPercent <= data[i-1].gmPercent || d.value > 0 ) ?
-        parseFloat(data[i-1].gmPercent) :
-        parseFloat(data[i].gmPercent);
+    return ( data[i].cumalative.gm <= data[i-1].cumalative.gm || d.gmDiff < 0 ) ?
+        parseFloat( data[i-1].cumalative.gm ) :
+        parseFloat( data[i].cumalative.gm );
 }
 
 // ***** PUBLIC FUNCTIONS ****************************************************

@@ -32,15 +32,15 @@ function _revenueMixArcSelect(d)
         .classed("revenueChart__arc--blank", false)
         .classed("revenueChart__arc--hover", true);
 
-    d3.select(".revenueChartLabel__type").text( d.name );
+    d3.select(".revenueChartLabel__type").text( d.displayName );
 
     d3.select(".revenueChartLabel__revenueValue").text( HelperFunctions.formatCurrency( d.revenue ) );
 
     d3.select(".revenueChartLabel__gmBg").attr( "class", "revenueChartLabel__gmBg");
 
-    d3.select(".revenueChartLabel__gmPercent")
-        .classed("revenueChartLabel__gmPercent--hover", true)
-        .text( HelperFunctions.formatGM( d.gmPercent ) );
+    d3.select(".revenueChartLabel__revenueMix")
+        .classed("revenueChartLabel__revenueMix--hover", true)
+        .text( "(" + d.revenueMix + "% of total mix)" );
 
     d3.selectAll(".revenueChart__segmentLabel")
         .classed("revenueChart__segmentLabel--blank", true);
@@ -71,9 +71,9 @@ function _revenueMixArcClear(d, totals, targetGM)
     d3.select(".revenueChartLabel__gmBg")
         .attr( "class", "revenueChartLabel__gmBg revenueChartLabel__gmBg--" + HelperFunctions.gmPercentColour( totals.gmPercent, targetGM ) );
 
-    d3.select(".revenueChartLabel__gmPercent")
-        .classed("revenueChartLabel__gmPercent--hover", false)
-        .text( HelperFunctions.formatGM( totals.gmPercent ) );
+    d3.select(".revenueChartLabel__revenueMix")
+        .classed("revenueChartLabel__revenueMix--hover", false)
+        .text( "(100% of total mix)" );
         
     d3.selectAll(".revenueChart__segmentLabel")
         .classed("revenueChart__segmentLabel--blank", false);
@@ -85,34 +85,64 @@ function _revenueMixArcClear(d, totals, targetGM)
         .attr("display", "none");
 }
 
+function _pricingTypeSelect( type )
+{
+    d3.selectAll(".pricingType--" + type.toLowerCase())
+        .classed("pricingType--current", true);
+}
+
+function _pricingTypeClear( )
+{
+    d3.selectAll(".pricingType")
+        .classed("pricingType--current", false);
+}
+
+function _revenueMixValue(revenue, totalRevenue)
+{
+    return HelperFunctions.formatFloat( ( revenue / totalRevenue ) * 100, 1 );
+}
+
 // ***** PUBLIC FUNCTIONS ****************************************************
 const PricingOverviewInteraction =
 {
     highlight: function(
         highlight = false,
-        segmentName = "Standard",
+        segmentName = "STANDARD",
+        segmentDisplayName = "Standard",
         gmPercent = 0,
         revenue = 0,
         industryRevenuePercent = 0,
-        totals = { revenue: 0, gmPercent: 0 },
+        totals = {
+            revenue: 0,
+            gmPercent: 0,
+            displayName: "Overview"
+        },
         targetGM = 0
     )
     {
         if( highlight && segmentName !== "Overall" )
         {
+            // highlight the relevant pricing type panel
+            _pricingTypeSelect( segmentName );
+
             // highlight the selected 'GM waterfall erosion' bar
             _waterfallBarSelect({ name: segmentName });
 
             // highlight the selected 'revenue mix' arc
             _revenueMixArcSelect({
                 name: segmentName,
+                displayName: segmentDisplayName,
                 revenue: revenue,
+                revenueMix: _revenueMixValue(revenue, totals.revenue),
                 gmPercent: gmPercent,
                 industryRevenuePercent: industryRevenuePercent
             });
         }
         else
         {
+            // clear any highlighted pricing types
+            _pricingTypeClear();
+
             // clear any selected 'GM waterfall erosion' bars
             _waterfallBarClear();
 

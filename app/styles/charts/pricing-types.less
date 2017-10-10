@@ -1,0 +1,152 @@
+.pricingOverview {
+    position: relative;
+}
+
+.pricingTypes {
+    padding: 10px 0;
+    margin-right: 210px;
+    border-radius: 4px;
+    background: #e6e6e6;
+}
+
+.pricingTypes,
+.pricingOverall {
+    line-height: 1em;
+}
+
+.pricingOverall {
+    padding: 10px;
+    background: #666666;
+    color: #fff;
+    border-radius: 4px;
+    width: 200px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 89px;
+}
+
+.pricingOverall h1 {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1em;
+    margin: 0;
+}
+
+.pricingType {
+    width: 18.7434554973822%;
+    height: 69px;
+    margin-left: 1.047120418848168%;
+    display: inline-block;
+    background: #f2f2f2;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.pricingType--current {
+    box-shadow: 0 0 5px rgba(0,0,0,0.35);
+}
+
+.pricingType {
+    border-left: 20px solid;
+    vertical-align: top;
+    position: relative;
+}
+
+.pricingType--standard {
+    border-color: @chartColour1;
+}
+
+.pricingType--basket {
+    border-color: @chartColour2;
+}
+
+.pricingType--customer {
+    border-color: @chartColour3;
+}
+
+.pricingType--promotion {
+    border-color: @chartColour4;
+}
+
+.pricingType--segment {
+    border-color: @chartColour5;
+}
+
+.pricingType h1 {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.pricingType__body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    width: 100%;
+    font-size: 12px;
+    line-height: 1em;
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        padding-top: 3px;
+
+        &:last-child {
+            text-align: right;
+        }
+    }
+}
+
+.pricingOverall__gm {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 69px;
+    width: 69px;
+    margin: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    text-align: center;
+
+    small, strong {
+        display: block;
+    }
+
+    small {
+        font-size: 10px;
+    }
+
+    strong {
+        padding: 5px 0;
+    }
+}
+
+.pricingOverall__gm--ok {
+    background: @okColour;
+    color: #fff;
+}
+
+.pricingOverall__gm--caution {
+    background: @cautionColour;
+    color: #333;
+}
+
+.pricingOverall__gm--warning {
+    background: @warningColour;
+    color: #fff;
+}
+
+.pricingOverall__revenue {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 10px;
+    
+    small, strong {
+        display: block;
+    }
+}

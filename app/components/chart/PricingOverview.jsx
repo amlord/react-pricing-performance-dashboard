@@ -2,12 +2,12 @@
 let { connect } = require('react-redux');
 
 // user-defined app components
-let GmPercentages = require('./GmPercentages.jsx');
+let PricingTypes = require('./PricingTypes.jsx');
 
 const mapStateToProps = state =>
 {
   return {
-    data: state.data,
+    waterfall: state.waterfall,
     revenueMix: state.revenueMix,
     target: state.target
   }
@@ -18,10 +18,10 @@ const mapDispatchToProps = dispatch =>
   return {};
 }
 
-const GmPercentagesContainer = connect(
+const PricingOverview = connect(
   mapStateToProps,
   mapDispatchToProps
-)(GmPercentages)
+)(PricingTypes)
 
-module.exports = GmPercentagesContainer;
+module.exports = PricingOverview;
                                     

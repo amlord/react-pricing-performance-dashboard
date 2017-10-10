@@ -40,23 +40,23 @@ export const INITIAL_STATE = {
       revenue: 399895,
       cogs: 202740
     },{
-      name: 'DISCOUNT',
-      displayName: 'Discount',
+      name: 'BASKET',
+      displayName: 'Basket',
       revenue: 380779,
       cogs: 247323
     },{
-      name: 'SEGMENTED',
-      displayName: 'Segmented',
+      name: 'SEGMENT',
+      displayName: 'Segment',
       revenue: 6434,
       cogs: 4166
     },{
-      name: 'CONTRACT',
-      displayName: 'Contract',
+      name: 'CUSTOMER',
+      displayName: 'Customer',
       revenue: 204490,
       cogs: 148697
     },{
-      name: 'PROMOTIONAL',
-      displayName: 'Promotional',
+      name: 'PROMOTION',
+      displayName: 'Promotion',
       revenue: 9032,
       cogs: 8619
     }
@@ -68,23 +68,23 @@ export const INITIAL_STATE = {
       revenue: 3892347,
       cogs: 1969636
     },{
-      name: 'DISCOUNT',
-      displayName: 'Discount',
+      name: 'BASKET',
+      displayName: 'Basket',
       revenue: 2311451,
       cogs: 1518352
     },{
-      name: 'SEGMENTED',
-      displayName: 'Segmented',
+      name: 'SEGMENT',
+      displayName: 'Segment',
       revenue: 264930,
       cogs: 153170
     },{
-      name: 'CONTRACT',
-      displayName: 'Contract',
+      name: 'CUSTOMER',
+      displayName: 'Customer',
       revenue: 1659665,
       cogs: 1102715
     },{
-      name: 'PROMOTIONAL',
-      displayName: 'Promotional',
+      name: 'PROMOTION',
+      displayName: 'Promotion',
       revenue: 91053,
       cogs: 70113
     }
@@ -189,15 +189,15 @@ export function gmRevenueMixApp( state = initialState, action )
 /* HELPER FUNCTIONS */
 function initData( data )
 {
-  data[STANDARD].gmPercent = calcGmPercent( data, STANDARD);
-  data[DISCOUNT].gmPercent = calcGmPercent( data, DISCOUNT);
-  data[SEGMENTED].gmPercent = calcGmPercent( data, SEGMENTED);
-  data[CONTRACT].gmPercent = calcGmPercent( data, CONTRACT);
-  data[PROMOTIONAL].gmPercent = calcGmPercent( data, PROMOTIONAL);
+  data[STANDARD].gmPercent = calcGmPercent( data, STANDARD );
+  data[DISCOUNT].gmPercent = calcGmPercent( data, DISCOUNT );
+  data[SEGMENTED].gmPercent = calcGmPercent( data, SEGMENTED );
+  data[CONTRACT].gmPercent = calcGmPercent( data, CONTRACT );
+  data[PROMOTIONAL].gmPercent = calcGmPercent( data, PROMOTIONAL );
 
   data[TOTAL] = {
     name: "TOTAL",
-    displayName: "Total",
+    displayName: "Overall",
     revenue: calcDataTotalRevenue( data ),
     cogs: calcDataTotalCogs( data )
   };
@@ -268,7 +268,8 @@ function calcRevenueMixChartValues( data, industryData )
 
     // add chart data to the array
     chartValues.push({
-      name: activeData[i].displayName,
+      name: activeData[i].name,
+      displayName: activeData[i].displayName,
       gmPercent: activeData[i].gmPercent,
       revenue: activeData[i].revenue,
       revenuePercent: revenuePercent.toFixed(1),
@@ -297,84 +298,143 @@ function calcRevenueMixChartValues( data, industryData )
   };
 }
 
+function calcFormattedGmPercent( revenue, cogs, decimalPlaces = null )
+{
+    // calulate GM%ge
+    let gmPercent = ( ( revenue - cogs ) / revenue ) * 100;
+
+    // format gmPercent, where required
+    gmPercent = decimalPlaces !== null ? 
+        parseFloat( gmPercent ).toFixed( decimalPlaces ) :
+        gmPercent;
+
+    return gmPercent;
+}
+
+function calcGmErosion( gmErosion, remainingTypes )
+{
+    while( remainingTypes.length )
+    {
+        let nextStep = nextErosionStep( gmErosion[gmErosion.length-1].cumalative, remainingTypes );
+
+        // add next step to gmErosion array
+        gmErosion.push( ...remainingTypes.filter( pricingType =>
+        {
+            return pricingType.name === nextStep;
+        } ) );
+
+        // add GM% calculations for next step
+        gmErosion = calcLastErosionStepGm( gmErosion );
+
+        // remove current step from remainingTypes
+        remainingTypes = remainingTypes.filter( pricingType =>
+        {
+            return pricingType.name !== nextStep;
+        } );
+    }
+
+    return gmErosion;
+}
+
+function nextErosionStep( currentState, remainingTypes )
+{
+    let negativeDiff = false;
+
+    let nextBestGm = remainingTypes.reduce( ( sum, pricingType ) =>
+    {
+        let combinedGm = calcFormattedGmPercent(
+                ( pricingType.revenue + currentState.revenue ),
+                ( pricingType.cogs + currentState.cogs )
+            ),
+            combinedGmDiff = currentState.gm - combinedGm;
+
+        // are we dealing with a -ve diff? (should go first)
+        if( combinedGmDiff < 0 )
+        {
+            negativeDiff = true;
+        }
+
+        // best GM result so far?
+        if( ( sum.gmDiff === null ) || // first result
+            ( negativeDiff && combinedGmDiff < sum.gmDiff ) ||  // -ve diff, and largest -ve
+            ( !negativeDiff && combinedGmDiff > sum.gmDiff ) )  // +ve diff, and largest +ve
+        {
+            return {
+                type: pricingType.name,
+                gmDiff: combinedGmDiff
+            };
+        }
+    
+        return sum;
+    },{ 
+        type: null,
+        gmDiff: null
+    });
+
+    return nextBestGm.type;
+}
+
+function calcLastErosionStepGm( gmErosion )
+{
+    let last = gmErosion.length - 1;
+
+    // calc GM% on last erosion step
+    gmErosion[last].gm = calcFormattedGmPercent( gmErosion[last].revenue, gmErosion[last].cogs );
+
+    // calc cumalative values
+    gmErosion[last].cumalative = gmErosion.reduce( ( sum, pricingType ) =>
+    {
+        let revenue = sum.revenue + pricingType.revenue,
+            cogs = sum.cogs + pricingType.cogs,
+            gm = calcFormattedGmPercent( revenue, cogs, 1 );
+
+        return {
+            revenue,
+            cogs,
+            gm
+        };
+    },{
+        revenue: 0,
+        cogs: 0,
+        gm: 0
+    });
+    
+    // calc erosion from previous step
+    gmErosion[ last ].gmDiff = gmErosion.length !== 1 ?
+        gmErosion[ last - 1 ].cumalative.gm - gmErosion[ last ].cumalative.gm : 
+        gmErosion[ last ].cumalative.gm; // first step, diff is GM%
+
+    return gmErosion;
+}
+
 function calcWaterfallChartValues( data )
 {
-  let chartValues = [],
-      activeData = data.slice();
+  // variables
+  let remainingTypes = data.slice(); // copy full dataset
+  let standard = remainingTypes.shift(); // remove "STANDARD" from full dataset
+  let total = remainingTypes.pop(); // remove "TOTAL" from full dataset
 
-  // remove unneeded items
-  activeData.splice( 0, 1 );
-  activeData.splice( activeData.length - 1, 1 );
+  let gmErosion = calcLastErosionStepGm( [ standard ] ); // calc GM% values for the standard pricing type
 
-  // order array by GM Percentage value
-  activeData.sort((a, b) =>
-  {
-    if(parseFloat(a.gmPercent) < parseFloat(b.gmPercent))
-    {
-      return 1;
-    }
-    if(parseFloat(a.gmPercent) > parseFloat(b.gmPercent))
-    {
-      return -1;
-    }
-    return 0;
+  // calculate GM%ge erosion
+  gmErosion = calcGmErosion( gmErosion, remainingTypes );
+
+  // add the 'Total' column
+  gmErosion.push({
+    name: "TOTAL",
+    displayName: total.displayName,
+    revenue: 0,
+    cogs: 0,
+    gmPercent: total.gmPercent,
+    cumalative: {
+      revenue: 0,
+      cogs: 0,
+      gm: total.gmPercent
+    },
+    gm: 0,
+    gmDiff: total.gmPercent
   });
 
-  activeData.unshift( data[STANDARD] );
-
-  // start GM% value
-  chartValues.push({
-    name: "Standard",
-    gmPercent: data[STANDARD].gmPercent,
-    value: data[STANDARD].gmPercent
-  });
-
-  // create the waterfall chart data
-  for (var i = 1; i < activeData.length; i++)
-  {
-    // get the cumalative revenue value
-    let cumalativeRev = activeData.reduce((sum, value, index) => 
-    {
-      if(index <= i)
-      {
-        return sum + value.revenue
-      }
-
-      return sum;
-    }, 0);
-
-    // get the cumalative 'cost of goods' value
-    let cumalativeCogs = activeData.reduce((sum, value, index) => 
-    {
-      if(index <= i)
-      {
-        return sum + value.cogs
-      }
-
-      return sum;
-    }, 0);
-
-    // work out the cumalative GM%
-    let gmPercent = ( ( cumalativeRev - cumalativeCogs ) / cumalativeRev ) * 100;
-    gmPercent = HelperFunctions.formatFloat(gmPercent, 1);
-
-    // work out the GM difference with the previous row
-    let gmDiff = chartValues[i-1].gmPercent - gmPercent;
-    gmDiff = HelperFunctions.formatFloat(gmDiff, 1) * -1;
-
-    // add chart data to the array
-    chartValues.push({
-      name: activeData[i].displayName,
-      gmPercent: gmPercent,
-      value: gmDiff
-    });
-  }
-
-  // actual GM% value
-  chartValues.push({
-    name: "Overall",
-    value: data[TOTAL].gmPercent
-  });
-
-  return chartValues;
+  // results
+  return gmErosion;
 }

@@ -9,7 +9,7 @@ let GmWaterfallCalculatedValuesContainer = require('./form/GmWaterfallCalculated
 
 let RevenueChartChartContainer = require('./chart/RevenueChartContainer.jsx');
 let WaterfallChartContainer = require('./chart/WaterfallChartContainer.jsx');
-let GmPercentagesContainer = require('./chart/GmPercentagesContainer.jsx');
+let PricingOverview = require('./chart/PricingOverview.jsx');
 
 class RevenueMix extends React.Component
 {
@@ -25,15 +25,15 @@ class RevenueMix extends React.Component
                                     <h1>Pricing Overview <small>(Last 12 Months)</small></h1>
                                 </header>
                                 <div className="panelBody panelBody--container">
-                                    <div className="row">
-                                        <div className="col-md-6">
+                                    <PricingOverview />
+                                    <div className="pricingOverviewCharts">
+                                        <div className="pricingOverviewChart">
                                             <WaterfallChartContainer />
                                         </div>
-                                        <div className="gmRevenueMixContainer col-md-6">
+                                        <div className="pricingOverviewChart">
                                             <RevenueChartChartContainer />
                                         </div>
                                     </div>
-                                    <GmPercentagesContainer />
                                 </div>
                             </section>
                         </div>

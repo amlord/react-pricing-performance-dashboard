@@ -65,7 +65,7 @@ class CalculatedValues extends React.Component
                                 {this.state.waterfall.map((cell, index) => {
                                     return (
                                         <CalculatedValuesHeaderCell 
-                                            name={cell.name}
+                                            name={cell.displayName}
                                             key={index}
                                         />
                                     )
@@ -79,7 +79,7 @@ class CalculatedValues extends React.Component
                                     return (
                                         <CalculatedValuesCell 
                                             index={index}
-                                            value={cell.value}
+                                            value={parseFloat(cell.gmDiff).toFixed(1)}
                                             key={index}
                                         />
                                     )
