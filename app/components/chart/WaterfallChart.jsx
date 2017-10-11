@@ -19,6 +19,11 @@ class WaterfallChart extends React.Component
         this.drawWaterfallChart = this.drawWaterfallChart.bind(this);
     }
 
+    componentWillMount()
+    {
+        window.addEventListener("resize", this.drawWaterfallChart);
+    }
+
     componentWillReceiveProps( nextProps )
     {
         let { waterfall, target, revenueMix } = this.state;

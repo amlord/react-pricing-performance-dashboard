@@ -18,6 +18,11 @@ class revenueChart extends React.Component
         this.drawRevenueChart = this.drawRevenueChart.bind(this);
     }
 
+    componentWillMount()
+    {
+        window.addEventListener("resize", this.drawRevenueChart);
+    }
+
     componentWillReceiveProps( nextProps )
     {
         let { revenueMix, target } = this.state;
