@@ -150,3 +150,81 @@
         display: block;
     }
 }
+
+@media (max-width: 1200px)
+{
+    .pricingTypes {
+        padding: 0;
+        margin-right: 177px;
+        background: transparent;
+    }
+
+    .pricingType {
+        width: 19.23076923076923%;
+        border-left-width: 10px;
+        margin-left: 0.9615384615384615%;
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+
+    .pricingType,
+    .pricingType__body {
+        padding: 5px;
+    }
+    
+    .pricingType__body {
+        font-size: 10px;
+    }
+
+    .pricingOverall {
+        padding: 7px;
+        height: 69px;
+        width: 170px;
+    }
+
+    .pricingOverall__revenue,
+    .pricingOverall__gm {
+        margin: 7px;
+    }
+
+    .pricingOverall__gm {
+        height: 55px;
+        padding: 4px;
+
+        small {
+            font-size: 9px;
+        }
+
+        strong {
+            padding: 0;
+            font-size: 14px;
+        }
+    }
+
+    .pricingOverall__revenue {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 991px)
+{
+    .pricingTypes {
+        margin: -1.45985401459854% 0 0 0;
+    }
+
+    .pricingType {
+        width: 49.27007299270073%;
+        margin: 1.45985401459854% 1.45985401459854% 0 0;
+
+        &:nth-child(even) {
+            margin-right: 0;
+        }
+    }
+
+    .pricingOverall {
+        position: relative;
+        margin-top: 10px;
+    }
+}

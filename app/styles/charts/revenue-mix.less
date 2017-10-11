@@ -121,3 +121,24 @@
 .revenueChart__segmentLabelOverlay {
     fill: transparent;
 }
+
+
+@media (max-width: 1200px) and (min-width: 992px)
+{
+    .revenueChartLabel__revenueValue {
+        font-size: 16px;
+    }
+
+    .revenueChartLabel__type,
+    .revenueChartLabel__revenueMix {
+        font-size: 11px;
+    }
+    
+    .revenueChartLabel__type {
+        transform: translateY(10px);
+    }
+    
+    .revenueChartLabel__revenueMix {
+        transform: translateY(-10px);
+    }
+}
