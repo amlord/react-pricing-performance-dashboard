@@ -27,7 +27,7 @@ class PricingTypes extends React.Component
 
     componentWillReceiveProps( nextProps )
     {
-        let { data, revenueMix, target } = this.state;
+        let { waterfall, revenueMix, target } = this.state;
 
         if( nextProps.waterfall !== waterfall )
         {
