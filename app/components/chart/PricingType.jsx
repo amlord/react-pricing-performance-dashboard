@@ -6,14 +6,6 @@ class PricingType extends React.Component
     {
         super(props);
 
-        this.state = {
-            type: props.type,
-            title: props.title,
-            revenue: props.revenue,
-            gm: props.gm,
-            over: false
-        };
-
         // This binding is necessary to make `this` work in the callback
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.handleMouseLeave = this.handleMouseLeave.bind(this);
@@ -33,7 +25,7 @@ class PricingType extends React.Component
 
     render()
     {
-        let { type, title, revenue, gm } = this.state;
+        let { type, title, revenue, gm } = this.props;
 
         return (
             <section className={"pricingType pricingType--" + type.toLowerCase()} onMouseEnter={ this.handleMouseEnter.bind(this, type) }  onMouseLeave={ this.handleMouseLeave.bind(this, type) }>

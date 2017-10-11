@@ -2,21 +2,9 @@ let React = require('react');
 
 class PricingOverall extends React.Component
 {
-    constructor(props)
-    {
-        super(props);
-
-        this.state = {
-            revenue: props.revenue,
-            gm: props.gm,
-            target: props.target,
-            targetStatus: props.targetStatus
-        };
-    }
-
     render()
     {
-        let { revenue, gm, target, targetStatus } = this.state;
+        let { revenue, gm, target, targetStatus } = this.props;
 
         return (
             <section className="pricingOverall">
